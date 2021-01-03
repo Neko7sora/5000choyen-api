@@ -1,6 +1,12 @@
-﻿# 5000choyen
-5000兆円風の文字を描画するWebツールです．
+﻿# 5000choyen-api
+Auto draw version
 
-<p align="center">
-  <img alt="500choyen" src="https://github.com/yurafuca/5000choyen/blob/master/docs/screenshot.png">
-</p>
+# how to use
+
+https://cyberrex0.github.io/5000choyen-api/?top=[TOP TEXT]&bottom=[BOTTOM TEXT]
+
+# caution
+
+it doesn't return the image.
+
+draw automatically by based parameter.
