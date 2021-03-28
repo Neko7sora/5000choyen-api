@@ -1,12 +1,38 @@
 ﻿# 5000choyen-api
-Auto draw version
+5000兆円欲しい！をnode-canvasを使用しサーバーサイドで生成できるようにしたものです。
 
 # how to use
 
-https://cyberrex0.github.io/5000choyen-api/?top=[TOP TEXT]&bottom=[BOTTOM TEXT]
+http:\/\/5000choyen.app.cyberrex.ml/image?top=上部文字列&bottom=下部文字列
+
+↓
+
+![](http://5000choyen.app.cyberrex.ml/image?top=上部文字列&bottom=下部文字列)
+
+注意: **HTTPSは使えません。**
+
+# spec
+画像形式: PNG (アルファチャンネルあり、背景透明)
+
+基本解像度: 1920x1080
 
 # caution
 
-it doesn't return the image.
+基本解像度は1920x1080ですが、文字列が短いとこの解像度より小さくなる場合があります。
 
-draw automatically by based parameter.
+どんなに長くても最大1920x1080です。
+
+過剰なアクセスはお控えください。
+
+# thanks
+このプログラムは、yurafuca様が作られたものをベースにNode.js向けに改良を加えつつ、サーバーサイドに移植したものです。
+原作リポジトリは[こちら](https://github.com/yurafuca/5000choyen)
+
+# fonts
+このジェネレーターは以下のフォントを使用しています。
+
+Noto Sans JP Black
+
+Noto Serif JP Black
+
+これらのフォントはオープンフォントライセンスに基づきGoogle Fontsよりダウンロード可能です。
