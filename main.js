@@ -5,8 +5,9 @@ const http = require('http');
 const escape = require('escape-html');
 const process = require('process');
 const fs = require('fs');
+const crypto = require('crypto');
 
-const APP_VER = '1.2';
+const APP_VER = '1.6';
 
 // webp-converter対策
 if (!fs.existsSync('node_modules/webp-converter/temp')) {
@@ -19,6 +20,14 @@ var _canvas = null;
 registerFont('./notobk-subset.otf', {family: 'notobk'});
 registerFont('./notoserifbk-subset.otf', {family: 'notoserifbk'});
 
+function toArrayBuffer(buffer) {
+  var ab = new ArrayBuffer(buffer.length);
+  var view = new Uint8Array(ab);
+  for (var i = 0; i < buffer.length; ++i) {
+      view[i] = buffer[i];
+  }
+  return ab;
+}
 
 http.createServer(function (req, resp) {
 
@@ -37,12 +46,7 @@ http.createServer(function (req, resp) {
     var noalpha = false;
     var rainbow = false;
     var imgtype = 'png';
-    
-    if (args.top == undefined) {
-      resp.writeHead(200, {'Content-type': 'text/html;charset=utf-8'});
-      resp.end('パラメータtopが不足しています。');
-      return;
-    }
+    var single = false;
 
     if (args.hoshii) {
       hoshii = args.hoshii=='true' ? true : false;
@@ -55,10 +59,20 @@ http.createServer(function (req, resp) {
     if (args.rainbow) {
       rainbow = args.rainbow=='true' ? true : false;
     }
+
+    if (args.single) {
+      single = args.single=='true' ? true : false;
+    }
+
+    if (!args.top && (!single || (single && !args.bottom))) {
+      resp.writeHead(400, {'Content-type': 'text/html;charset=utf-8'});
+      resp.end('<h1>Bad Request</h1>パラメータtopが不足しています。');
+      return;
+    }
  
-    if (args.bottom == undefined && !hoshii) {
-      resp.writeHead(200, {'Content-type': 'text/html;charset=utf-8'});
-      resp.end('パラメータbottomが不足しています。');
+    if (!args.bottom && !hoshii && (!single || (single && !args.top))) {
+      resp.writeHead(400, {'Content-type': 'text/html;charset=utf-8'});
+      resp.end('<h1>Bad Request</h1>パラメータbottomが不足しています。');
       return;
     }
 
@@ -67,36 +81,84 @@ http.createServer(function (req, resp) {
         args.type = 'jpeg';
       }
       if (args.type != 'png' && args.type != 'jpeg' && args.type != 'webp') {
-        resp.writeHead(200, {'Content-type': 'text/html;charset=utf-8'});
-        resp.end('パラメータtypeの値が異常です。');
+        resp.writeHead(400, {'Content-type': 'text/html;charset=utf-8'});
+        resp.end('<h1>Bad Request</h1>パラメータtypeの値が異常です。');
         return;
       }
       imgtype = args.type;
     }
 
-    /*resp.writeHead(200, {'Content-type': 'text/html'});
-    resp.end('test');*/
-    const canvas = new Canvas(createCanvas(1920,1080), {hoshii: hoshii, noalpha: noalpha});
+    if (single) {
+      if (args.top && args.bottom) {
+        resp.writeHead(400, {'Content-type': 'text/html;charset=utf-8'});
+        resp.end('<h1>Bad Request</h1>パラメータtopとbottomは同時に指定できません');
+        return;
+      }
+      single = true;
+    }
 
-    canvas.redrawTop(args.top, rainbow);
+    const sha1sum = crypto.createHash('sha1');
+    sha1sum.update(JSON.stringify(args));
+    const cachefname = sha1sum.digest('hex');
+    const cachename = '/tmp/5000_'+cachefname+'.'+imgtype;
+    let fileExist = false;
 
-    if (! hoshii) {
-      canvas.redrawBottom(args.bottom, null, rainbow);
-    } else {
-      canvas.redrawImage();
+    try {
+      const cachefile = fs.statSync(cachename);
+      fileExist = true;
+    } catch(e) {
+      fileExist = false;
+    }
+
+    if (fileExist) {
+      const data = fs.readFileSync(cachename);
+      resp.writeHead(200, {'Content-type': 'image/'+imgtype});
+      resp.write(data);
+      resp.end();
+      return;
+    }
+    
+    if (!args.top) args.top = '';
+    if (!args.bottom) args.bottom = '';
+
+    // vulnerability countermeasures
+    if (args.top.length > 50 || args.bottom.length > 50) {
+      resp.writeHead(400, {'Content-type': 'text/html;charset=UTF-8'});
+      resp.write('<h1>Bad Request</h1>');
+      resp.end();
+      return;
+    }
+
+    const canvas = new Canvas(createCanvas(3840,1080), {hoshii: hoshii, noalpha: noalpha});
+
+    if (!single) {
+      canvas.redrawTop(args.top, rainbow);
+
+      if (! hoshii) {
+        canvas.redrawBottom(args.bottom, null, rainbow);
+      } else {
+        canvas.redrawImage();
+      }
+    }else{
+      if (args.top) {
+        canvas.redrawTop(args.top[0], rainbow);
+      }else{
+        canvas.redrawBottom(args.bottom[0], null, rainbow);
+      }
     }
 
     resp.writeHead(200, {'Content-type': 'image/'+imgtype});
     canvas.createBuffer(imgtype, function (data) {
        resp.write(data);
        resp.end();
-    });
+       fs.writeFileSync(cachename, data); // save cache
+    }, args.q);
 
     return;
 
   } else if (req.url=='/image') {
     resp.writeHead(200, {'Content-type': 'text/html;charset=utf-8'});
-    resp.end('使い方が間違っています。<br><a href="/">使い方を確認</a>');
+    resp.end('<h1>Invalid Request</h1>');
     return;
   }
 
