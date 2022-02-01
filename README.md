@@ -2,6 +2,12 @@
 
 5000 兆円欲しい！をサーバーサイドで生成できるようにしたものです。
 
+# Shields
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api?ref=badge_shield)
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api?ref=badge_large)
+
+
 # how to use
 
 https:\/\/gsapi.cyberrex.jp/image?top=上部文字列&bottom=下部文字列
@@ -9,7 +15,6 @@ https:\/\/gsapi.cyberrex.jp/image?top=上部文字列&bottom=下部文字列
 ↓
 
 ![a](https://gsapi.cyberrex.jp/image?top=上部文字列&bottom=下部文字列)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api?ref=badge_shield)
 
 # spec
 
@@ -71,7 +76,3 @@ GSAPI_SSL="1" # 1=true, 0=false
 
 このプログラムは、yurafuca 様が作られたものをベースに Node.js 向けに改良を加えつつ、サーバーサイドに移植したものです。
 原作リポジトリは[こちら](https://github.com/yurafuca/5000choyen)
-
-
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api?ref=badge_large)
