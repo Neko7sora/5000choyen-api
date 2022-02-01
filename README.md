@@ -2,11 +2,16 @@
 
 5000 兆円欲しい！をサーバーサイドで生成できるようにしたものです。
 
-# Shields
+---
+
+Fork from https://github.com/Cyberrex0/5000choyen-api
+
+## Shields
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api?ref=badge_shield)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FNeko7sora-dev%2F5000choyen-api?ref=badge_large)
 
+---
 
 # how to use
 
