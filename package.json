@@ -23,7 +23,7 @@
     "ajv": "^8.0.1",
     "canvas": "^2.7.0",
     "escape-html": "^1.0.3",
-    "eslint": "^8.0.0",
+    "eslint": "^8.57.0",
     "webp-converter": "^2.3.3"
   },
   "engines": {
